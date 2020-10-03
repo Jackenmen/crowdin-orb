@@ -1,0 +1,14 @@
+version: 2.1
+
+description: >
+  An orb for uploading and downloading translations on Crowdin using Crowdin CLI v3.
+# What will your orb allow users to accomplish?
+# Descriptions should be short, simple, and informative.
+
+# This information will be displayed in the orb registry and is not mandatory.
+display:
+  source_url: "https://www.github.com/jack1142/crowdin-orb"
+
+# If your orb requires other orbs, you can import them like this. Otherwise remove the "orbs" stanza.
+# orbs:
+#  hello: circleci/hello-build@0.0.5
