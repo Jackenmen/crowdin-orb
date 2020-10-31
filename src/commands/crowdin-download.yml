@@ -1,0 +1,46 @@
+description: >
+  Download translations using `crowdin download`.
+
+  Requires the usage of `crowdin-cli` executor or manual installation of Crowdin CLI v3.
+parameters:
+  language:
+    type: string
+    default: all
+    description: Only download translations for the specified language.
+  skip_untranslated_strings:
+    type: boolean
+    default: false
+    description: >-
+      Skip untranslated strings in exported files
+      (does not work with .docx, .html, .md and other document files).
+  skip_untranslated_files:
+    type: boolean
+    default: false
+    description: Omit downloading not fully translated files.
+  export_only_approved:
+    type: boolean
+    default: false
+    description: >-
+      Include approved translations only in exported files.
+
+      If `skip_untranslated_strings` is set to `false` (default),
+      strings without approval are fulfilled with the source language.
+  additional_flags:
+    type: string
+    default: ""
+    description: Specify additional flags to be passed to `crowdin download` command.
+steps:
+  - run:
+      name: Download translations.
+      command: |-
+        FLAGS="<<parameters.additional_flags>>"
+        if [ "<<parameters.skip_untranslated_strings>>" = true ]; then
+          FLAGS="${FLAGS} --skip-untranslated-strings"
+        fi
+        if [ "<<parameters.skip_untranslated_files>>" = true ]; then
+          FLAGS="${FLAGS} --skip-untranslated-files"
+        fi
+        if [ "<<parameters.export_only_approved>>" = true ]; then
+          FLAGS="${FLAGS} --export-only-approved"
+        fi
+        crowdin download --language=<<parameters.language>> "${FLAGS}"

@@ -1,0 +1,48 @@
+description: >
+  An example presenting all that can be done with this orb.
+# Provide a use-case based example for using this orb.
+# Everything in the `usage` section will be displayed in the orb registry.
+# Comments are not retained.
+usage:
+  version: 2.1
+  orbs:
+    crowdin: jack1142/crowdin-orb@x.y
+  jobs:
+    crowdin_upload:
+      executor: crowdin/crowdin-cli
+      steps:
+        - crowdin/prepare-env:
+            github_username: machine_account
+            github_token: ENVIRONMENT_VARIABLE_WITH_GITHUB_TOKEN
+            base_branch: develop
+            git_name: Some custom git name
+            git_email: some.custom@git.email.com
+        - crowdin/crowdin-upload-sources
+        - crowdin/crowdin-upload-translations:
+            language: fr
+            auto_approve_imported: true
+            import_eq_suggestions: true
+            additional_flags: --some-flag-that-is-not-provided-directly-by-this-orb
+  workflows:
+    crowdin:
+      jobs:
+        - crowdin_upload:
+            context:
+              - environment-with-crowdin-credentials
+        - crowdin/download:
+            context:
+              - environment-with-crowdin-credentials
+            language: fr
+            skip_untranslated_strings: true
+            skip_untranslated_files: false
+            export_only_approved: true
+            additional_flags: --some-flag-that-is-not-provided-directly-by-this-orb
+            # PR options
+            github_username: machine_account
+            github_token: ENVIRONMENT_VARIABLE_WITH_GITHUB_TOKEN
+            base_branch: develop
+            pr_branch: automated/i18n
+            commit_message: Crowdin translations downstream
+            pr_title: Crowdin translations downstream
+            git_name: Some custom git name
+            git_email: some.custom@git.email.com

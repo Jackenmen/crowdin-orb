@@ -1,0 +1,8 @@
+description: >
+  Install command requirements.
+
+  This will eventually be moved to using Dockerfile for user's convenience.
+steps:
+  - run:
+      name: Install requirements.
+      command: apk --no-cache add curl git jq
