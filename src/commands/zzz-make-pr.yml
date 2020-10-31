@@ -1,0 +1,60 @@
+description: >
+  Make a pull request.
+
+  This orb is an internal command and is not meant to be used
+  by people depending on this orb.
+parameters:
+  github_username:
+    type: string
+    description: GitHub username, used when pulling and creating pull request.
+  github_token:
+    type: env_var_name
+    description: >-
+      Name of environment variable storing GitHub token,
+      used when pulling and creating pull request.
+  base_branch:
+    type: string
+    default: ""
+    description: >-
+      Branch the PR should be based off.
+      If not specified, the currently built branch will be used.
+  pr_branch:
+    type: string
+    description: >-
+      Branch name that will be used when making the commit and the PR.
+      If the branch already exists, this job will force-push to it.
+  commit_message:
+    type: string
+    description: Commit message for downloaded translations.
+  pr_title:
+    type: string
+    default: Automatic Crowdin translations update
+    description: Title of the pull request for downloaded translations.
+steps:
+  - run:
+      name: Make a new branch.
+      command: |-
+        git checkout -b <<parameters.pr_branch>>
+  - run:
+      name: Check if there are any changes.
+      command: |-
+        if [ -z "$(git status -s)" ]; then
+          circleci-agent step halt
+        fi
+  - run:
+      name: Add and commit changes.
+      command: |-
+        git add .
+        git commit -m "<<parameters.commit_message>>"
+        git push -u origin <<parameters.pr_branch>>
+  - run:
+      name: Make a pull request.
+      command: |-
+        if [ "<<parameters.base_branch>>" = "" ]; then
+          BASE_BRANCH="${CIRCLE_BRANCH}"
+        else
+          BASE_BRANCH="<<parameters.base_branch>>"
+        fi
+        curl --fail -u <<parameters.github_username>>:${<<parameters.github_token>>} -X POST -d
+        "{\"base\":\"$BASE_BRANCH\",\"head\":\"<<parameters.pr_branch>>\",\"title\":\"<<parameters.pr_title>>\"}"
+        https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls)

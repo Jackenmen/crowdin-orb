@@ -1,0 +1,89 @@
+description: >
+  Download translations and make a PR with updated files.
+
+executor: crowdin-cli
+
+parameters:
+  # `crowdin download` options
+  language:
+    type: string
+    default: all
+    description: Only download translations for the specified language.
+  skip_untranslated_strings:
+    type: boolean
+    default: false
+    description: >-
+      Skip untranslated strings in exported files
+      (does not work with .docx, .html, .md and other document files).
+  skip_untranslated_files:
+    type: boolean
+    default: false
+    description: Omit downloading not fully translated files.
+  export_only_approved:
+    type: boolean
+    default: false
+    description: >-
+      Include approved translations only in exported files.
+
+      If `skip_untranslated_strings` is set to `false` (default),
+      strings without approval are fulfilled with the source language.
+  additional_flags:
+    type: string
+    default: ""
+    description: Specify additional flags to be passed to `crowdin download` command.
+  # PR options
+  github_username:
+    type: string
+    description: GitHub username, used when pulling and creating pull request.
+  github_token:
+    type: env_var_name
+    description: >-
+      Name of environment variable storing GitHub token,
+      used when pulling and creating pull request.
+  base_branch:
+    type: string
+    default: ""
+    description: >-
+      Branch the PR should be based off.
+      If not specified, the currently built branch will be used.
+  pr_branch:
+    type: string
+    description: >-
+      Branch name that will be used when making the commit and the PR.
+      If the branch already exists, this job will force-push to it.
+  commit_message:
+    type: string
+    default: Automatic Crowdin translations update
+    description: Commit message for downloaded translations.
+  pr_title:
+    type: string
+    default: Automatic Crowdin translations update
+    description: Title of the pull request for downloaded translations.
+  git_name:
+    type: string
+    default: CircleCI
+    description: Name used for author of the commit.
+  git_email:
+    type: string
+    default: sayhi@circleci.com
+    description: Email used for author of the commit.
+steps:
+  - prepare-env:
+      github_username: <<parameters.github_username>>
+      github_token: <<parameters.github_token>>
+      base_branch: <<parameters.base_branch>>
+      git_name: <<parameters.git_name>>
+      git_email: <<parameters.git_email>>
+  - crowdin-download:
+      language: <<parameters.language>>
+      skip_untranslated_strings: <<parameters.skip_untranslated_strings>>
+      skip_untranslated_files: <<parameters.skip_untranslated_files>>
+      export_only_approved: <<parameters.export_only_approved>>
+      additional_flags: <<parameters.additional_flags>>
+  - zzz-make-pr:
+      github_username: <<parameters.github_username>>
+      github_token: <<parameters.github_token>>
+      base_branch: <<parameters.base_branch>>
+      pr_branch: <<parameters.pr_branch>>
+      commit_message: <<parameters.commit_message>>
+      pr_title: <<parameters.pr_title>>

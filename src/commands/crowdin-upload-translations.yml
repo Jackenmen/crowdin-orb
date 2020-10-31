@@ -1,0 +1,36 @@
+description: >
+  Upload translations using `crowdin upload translations`.
+
+  Requires the usage of `crowdin-cli` executor or manual installation of Crowdin CLI v3.
+parameters:
+  language:
+    type: string
+    default: all
+    description: Only upload translations for the specified language.
+  auto_approve_imported:
+    type: boolean
+    default: false
+    description: Automatically approve uploaded translations.
+  import_eq_suggestions:
+    type: boolean
+    default: false
+    description: >-
+      Defines whether to add translation
+      if it is equal to source string in Crowdin project.
+  additional_flags:
+    type: string
+    default: ""
+    description: >-
+      Specify additional flags to be passed to `crowdin upload translations` command.
+steps:
+  - run:
+      name: Upload translations.
+      command: |-
+        FLAGS="<<parameters.additional_flags>>"
+        if [ "<<parameters.auto_approve_imported>>" = true ]; then
+          FLAGS="${FLAGS} --auto-approve-imported"
+        fi
+        if [ "<<parameters.import_eq_suggestions>>" = true ]; then
+          FLAGS="${FLAGS} --import-eq-suggestions"
+        fi
+        crowdin upload translations --language=<<parameters.language>> "${FLAGS}"

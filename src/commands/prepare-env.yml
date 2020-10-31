@@ -1,0 +1,34 @@
+description: >
+  Prepare the environment.
+parameters:
+  github_username:
+    type: string
+    description: GitHub username, used when pulling and creating pull request.
+  github_token:
+    type: env_var_name
+    description: >-
+      Name of environment variable storing GitHub token,
+      used when pulling and creating pull request.
+  base_branch:
+    type: string
+    default: ""
+    description: >-
+      Branch the PR should be based off.
+      If not specified, the currently built branch will be used.
+  git_name:
+    type: string
+    default: CircleCI
+    description: Name used for author of the commit.
+  git_email:
+    type: string
+    default: sayhi@circleci.com
+    description: Email used for author of the commit.
+steps:
+  - install-requirements
+  - git-clone:
+      github_username: <<parameters.github_username>>
+      github_token: <<parameters.github_token>>
+      base_branch: <<parameters.base_branch>>
+  - git-set-user-config:
+      git_name: <<parameters.git_name>>
+      git_email: <<parameters.git_name>>

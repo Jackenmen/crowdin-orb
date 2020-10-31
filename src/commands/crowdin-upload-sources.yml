@@ -1,0 +1,15 @@
+description: >
+  Upload sources using `crowdin upload sources`.
+
+  Requires the usage of `crowdin-cli` executor or manual installation of Crowdin CLI v3.
+parameters:
+  additional_flags:
+    type: string
+    default: ""
+    description: >-
+      Specify additional flags to be passed to `crowdin upload sources` command.
+steps:
+  - run:
+      name: Upload sources.
+      command: |-
+        crowdin upload sources <<parameters.additional_flags>>

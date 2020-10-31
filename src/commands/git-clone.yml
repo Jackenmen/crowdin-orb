@@ -1,0 +1,28 @@
+description: >
+  Clone the repository using the given parameters.
+parameters:
+  github_username:
+    type: string
+    description: GitHub username, used when pulling and creating pull request.
+  github_token:
+    type: env_var_name
+    description: >-
+      Name of environment variable storing GitHub token,
+      used when pulling and creating pull request.
+  base_branch:
+    type: string
+    default: ""
+    description: >-
+      Branch the PR should be based off.
+      If not specified, the currently built branch will be used.
+steps:
+  - run:
+      command: |-
+        if [ "<<parameters.base_branch>>" = "" ]; then
+          BASE_BRANCH="${CIRCLE_BRANCH}"
+        else
+          BASE_BRANCH="<<parameters.base_branch>>"
+        fi
+        readonly GITHUB_USERNAME=<<parameters.github_username>>
+        readonly GITHUB_TOKEN=${<<parameters.github_token>>}
+        git clone "https://$GITHUB_USERNAME:$GITHUB_TOKEN@github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME" -b <<parameters.base_branch>> .

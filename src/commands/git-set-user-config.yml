@@ -1,0 +1,16 @@
+description: >
+  Set git user config.
+parameters:
+  git_name:
+    type: string
+    default: CircleCI
+    description: Name used for author of the commit.
+  git_email:
+    type: string
+    default: sayhi@circleci.com
+    description: Email used for author of the commit.
+steps:
+  - run:
+      command: |-
+        git config --global user.name "<<parameters.git_name>>"
+        git config --global user.email "<<parameters.git_email>>"
