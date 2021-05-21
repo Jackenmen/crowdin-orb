@@ -1,5 +1,6 @@
 # Crowdin Orb for CircleCI
 
+[![Subscribe on Patreon](https://img.shields.io/badge/Support%20me%20on-Patreon-orange.svg?logo=patreon)](https://www.patreon.com/Jackenmen)
 [![CircleCI Build Status](https://circleci.com/gh/jack1142/crowdin-orb.svg?style=shield "CircleCI Build Status")](https://circleci.com/gh/jack1142/crowdin-orb)
 [![CircleCI Orb Version](https://img.shields.io/badge/endpoint.svg?url=https://badges.circleci.io/orb/jack1142/crowdin-orb)](https://circleci.com/orbs/registry/orb/jack1142/crowdin-orb)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
